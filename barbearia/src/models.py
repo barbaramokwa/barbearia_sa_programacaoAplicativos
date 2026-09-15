@@ -16,3 +16,7 @@ class Agendamento:
     def converte_tupla(self):
         return (self.cliente, self.telefone, self.servico, self.preco, self.barbeiro, self.data, self.horario, self.status)
 
+    @staticmethod
+    def reverte_tupla(tupla):
+        id, cliente, telefone, servico, preco, barbeiro, data, horario, status = tupla
+        return Agendamento(cliente=cliente, telefone=telefone, servico=servico, preco=preco, barbeiro=barbeiro, data=data, horario=horario, status=status, id=id)
