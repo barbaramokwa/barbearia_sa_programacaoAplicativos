@@ -10,7 +10,7 @@ def cadastrar_agendamento(agendamento):
         conexao = conectar()
         cursor = conexao.cursor()
 
-        sql = "INSERT INTO agendamento (nome, email, telefone) VALUES (%s, %s, %s)"
+        sql = "INSERT INTO agendamento (cliente, telefone, servico, preco, barbeiro, data, horario, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(sql, agendamento.converte_tupla())
 
         conexao.commit()
@@ -32,7 +32,7 @@ def listar_agendamentos():
         conexao = conectar()
         cursor = conexao.cursor()
 
-        sql = "SELECT id, nome, email, telefone FROM clientes ORDER BY nome ASC"
+        sql = "SELECT id, cliente, telefone, servico, preco, barbeiro, data, horario, status FROM clientes ORDER BY nome ASC"
         cursor.execute(sql)
         registros = cursor.fetchall()
 
@@ -59,7 +59,7 @@ def buscar_por_id(id):
         conexao = conectar()
         cursor = conexao.cursor()
 
-        sql = "SELECT id, nome, email, telefone FROM clientes WHERE id = %s"
+        sql = "SELECT id, cliente, telefone, servico, preco, barbeiro, data, horario, status FROM clientes WHERE id = %s"
         cursor.execute(sql, (id,))
         registro = cursor.fetchone()
 
