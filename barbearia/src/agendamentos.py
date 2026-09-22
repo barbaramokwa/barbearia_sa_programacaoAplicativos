@@ -75,3 +75,5 @@ def buscar_por_id(id):
             conexao.close()
 
     return agendamento
+
+print(listar_agendamentos())
