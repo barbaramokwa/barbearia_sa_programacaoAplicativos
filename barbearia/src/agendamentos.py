@@ -64,14 +64,14 @@ def buscar_por_id(id):
         registro = cursor.fetchone()
 
         if registro:
-            cliente = Agendamento.reverte_tupla(registro)
+            agendamento = Agendamento.reverte_tupla(registro)
 
     except mysql.connector.Error as erro:
-        print(f"Erro ao buscar cliente: {erro}")
+        print(f"Erro ao buscar agendamento: {erro}")
     finally:
         if cursor:
             cursor.close()
         if conexao and conexao.is_connected():
             conexao.close()
 
-    return cliente
+    return agendamento
