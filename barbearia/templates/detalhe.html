@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhe do Agendamento - Barbearia Navalha de Ouro</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
+        nav { margin-bottom: 20px; }
+        nav a { margin-right: 15px; text-decoration: none; font-weight: bold; color: #2c3e50; }
+        .card { background: white; padding: 20px; border-radius: 8px; max-width: 500px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .erro { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Barbearia Navalha de Ouro</h1>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Início</a>
+        <a href="{{ url_for('ver_agendamentos') }}">Agendamentos</a>
+    </nav>
+
+    <h2>Detalhes do Agendamento</h2>
+
+    {% if agendamento %}
+        <div class="card">
+            <p><strong>ID:</strong> {{ agendamento.id }}</p>
+            <p><strong>Cliente:</strong> {{ agendamento.cliente }}</p>
+            <p><strong>Telefone:</strong> {{ agendamento.telefone }}</p>
+            <p><strong>Serviço:</strong> {{ agendamento.servico }}</p>
+            <p><strong>Preço:</strong> R$ {{ "%.2f"|format(agendamento.preco) }}</p>
+            <p><strong>Barbeiro:</strong> {{ agendamento.barbeiro }}</p>
+            <p><strong>Data:</strong> {{ agendamento.data }}</p>
+            <p><strong>Horário:</strong> {{ agendamento.horario }}</p>
+            <p><strong>Status:</strong> {{ agendamento.status }}</p>
+        </div>
+    {% else %}
+        <p class="erro">Agendamento não encontrado!</p>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('ver_agendamentos') }}">← Voltar para a listagem</a>
+</body>
+</html>
