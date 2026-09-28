@@ -2,18 +2,44 @@ import mysql.connector
 from banco import conectar
 from models import Agendamento
 
-def listar_agendamentos():
+
+def cadastrar_agendamento(agendamento):
     conexao = None
     cursor = None
-    lista = []
     try:
         conexao = conectar()
         cursor = conexao.cursor()
-        sql = "SELECT id, cliente, telefone, servico, preco, barbeiro, data, horario, status FROM agendamentos ORDER BY data ASC, horario ASC"
+
+        sql = "INSERT INTO agendamento (cliente, telefone, servico, preco, barbeiro, data, horario, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(sql, agendamento.converte_tupla())
+
+        conexao.commit()
+        print(f"'{agendamento.nome}' cadastrado com sucesso!")
+    except mysql.connector.Error as erro:
+        print(f"Erro ao cadastrar agendamento: {erro}")
+    finally:
+        if cursor:
+            cursor.close()
+        if conexao and conexao.is_connected():
+            conexao.close()
+
+
+def listar_agendamentos():
+    conexao = None
+    cursor = None
+    lista_agendamentos = []
+    try:
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        sql = "SELECT id, cliente, telefone, servico, preco, barbeiro, data, horario, status FROM clientes ORDER BY nome ASC"
         cursor.execute(sql)
-        resultados = cursor.fetchall()
-        for linha in resultados:
-            lista.append(Agendamento.reverte_tupla(linha))
+        registros = cursor.fetchall()
+
+        for tupla in registros:
+            agen = Agendamento.reverte_tupla(tupla)
+            lista_agendamentos.append(agen)
+
     except mysql.connector.Error as erro:
         print(f"Erro ao listar agendamentos: {erro}")
     finally:
@@ -21,46 +47,33 @@ def listar_agendamentos():
             cursor.close()
         if conexao and conexao.is_connected():
             conexao.close()
-    return lista
 
-def buscar_agendamento(id_agendamento):
+    return lista_agendamentos
+
+
+def buscar_por_id(id):
     conexao = None
     cursor = None
     agendamento = None
     try:
         conexao = conectar()
         cursor = conexao.cursor()
-        sql = "SELECT id, cliente, telefone, servico, preco, barbeiro, data, horario, status FROM agendamentos WHERE id = %s"
-        cursor.execute(sql, (id_agendamento,))
-        linha = cursor.fetchone()
-        if linha:
-            agendamento = Agendamento.reverte_tupla(linha)
+
+        sql = "SELECT id, cliente, telefone, servico, preco, barbeiro, data, horario, status FROM clientes WHERE id = %s"
+        cursor.execute(sql, (id,))
+        registro = cursor.fetchone()
+
+        if registro:
+            agendamento = Agendamento.reverte_tupla(registro)
+
     except mysql.connector.Error as erro:
-        print(f"Erro ao buscar agendamento ID {id_agendamento}: {erro}")
+        print(f"Erro ao buscar agendamento: {erro}")
     finally:
         if cursor:
             cursor.close()
         if conexao and conexao.is_connected():
             conexao.close()
+
     return agendamento
 
-def listar_por_status(status):
-    conexao = None
-    cursor = None
-    lista = []
-    try:
-        conexao = conectar()
-        cursor = conexao.cursor()
-        sql = "SELECT id, cliente, telefone, servico, preco, barbeiro, data, horario, status FROM agendamentos WHERE status = %s ORDER BY data ASC, horario ASC"
-        cursor.execute(sql, (status,))
-        resultados = cursor.fetchall()
-        for linha in resultados:
-            lista.append(Agendamento.reverte_tupla(linha))
-    except mysql.connector.Error as erro:
-        print(f"Erro ao listar agendamentos por status '{status}': {erro}")
-    finally:
-        if cursor:
-            cursor.close()
-        if conexao and conexao.is_connected():
-            conexao.close()
-    return lista
+print(listar_agendamentos())
