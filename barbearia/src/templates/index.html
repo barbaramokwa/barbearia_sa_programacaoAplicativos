@@ -1,28 +1,146 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <title>Barbearia Navalha de Ouro - Início</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
-        nav { margin-bottom: 20px; }
-        nav a { margin-right: 15px; text-decoration: none; font-weight: bold; color: #2c3e50; }
-        .card { background: white; padding: 20px; border-radius: 8px; max-width: 400px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .destaque { font-size: 2em; font-weight: bold; color: #e67e22; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Início | Barbearia Navalha de Ouro</title>
+
+    <link rel="stylesheet" href="../dist/output.css">
 </head>
-<body>
-    <h1>Barbearia Navalha de Ouro</h1>
 
-    <nav>
-        <a href="{{ url_for('index') }}">Início</a>
-        <a href="{{ url_for('ver_agendamentos') }}">Agendamentos</a>
-    </nav>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
 
-    <div class="card">
-        <h2>Painel de Controle</h2>
-        <p>Total de agendamentos registrados no sistema:</p>
-        <div class="destaque">{{ agendamentos|length }}</div>
-    </div>
+    <!-- HEADER -->
+    <header class="bg-zinc-900 border-b border-amber-500/30">
+
+        <nav class="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
+
+            <!-- Logo -->
+            <a href="{{ url_for('index') }}"
+               class="text-lg font-bold text-amber-400">
+                ✂ Navalha de Ouro
+            </a>
+
+            <!-- Menu -->
+            <ul class="flex gap-6 text-sm">
+
+                <li>
+                    <a href="{{ url_for('index') }}"
+                       class="text-amber-400 font-semibold">
+                        Início
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('ver_agendamentos') }}"
+                       class="text-zinc-300 hover:text-amber-400">
+                        Agendamentos
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </header>
+
+
+    <!-- CONTEÚDO -->
+    <main class="flex-1 w-full max-w-5xl mx-auto px-6 py-12">
+
+        <h1 class="text-3xl font-bold">
+            Painel de
+            <span class="text-amber-400">
+                Controle
+            </span>
+        </h1>
+
+        <p class="text-zinc-400 mt-2">
+            Resumo dos agendamentos registrados no sistema.
+        </p>
+
+
+        <!-- CARDS -->
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mt-8">
+
+            <!-- Total -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+
+                <p class="text-sm text-zinc-400">
+                    Total
+                </p>
+
+                <p class="text-4xl font-bold mt-2 text-amber-400">
+                    3
+                </p>
+
+            </div>
+
+
+            <!-- Agendados -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+
+                <p class="text-sm text-zinc-400">
+                    Agendados
+                </p>
+
+                <p class="text-4xl font-bold mt-2 text-zinc-100">
+                    1
+                </p>
+
+            </div>
+
+
+            <!-- Concluídos -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+
+                <p class="text-sm text-zinc-400">
+                    Concluídos
+                </p>
+
+                <p class="text-4xl font-bold mt-2 text-green-400">
+                    1
+                </p>
+
+            </div>
+
+
+            <!-- Cancelados -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+
+                <p class="text-sm text-zinc-400">
+                    Cancelados
+                </p>
+
+                <p class="text-4xl font-bold mt-2 text-red-400">
+                    1
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- BOTÃO -->
+        <a href="{{ url_for('ver_agendamentos') }}"
+           class="inline-block mt-8 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-semibold px-6 py-3 rounded-lg">
+
+            Ver agendamentos
+
+        </a>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="border-t border-zinc-800 text-center text-sm text-zinc-500 py-6">
+
+        Barbearia Navalha de Ouro
+
+    </footer>
+
 </body>
+
 </html>

@@ -1,43 +1,240 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <title>Detalhe do Agendamento - Barbearia Navalha de Ouro</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
-        nav { margin-bottom: 20px; }
-        nav a { margin-right: 15px; text-decoration: none; font-weight: bold; color: #2c3e50; }
-        .card { background: white; padding: 20px; border-radius: 8px; max-width: 500px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .erro { color: red; font-weight: bold; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <title>Detalhe do agendamento | Barbearia Navalha de Ouro</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
 </head>
-<body>
-    <h1>Barbearia Navalha de Ouro</h1>
 
-    <nav>
-        <a href="{{ url_for('index') }}">Início</a>
-        <a href="{{ url_for('ver_agendamentos') }}">Agendamentos</a>
-    </nav>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
 
-    <h2>Detalhes do Agendamento</h2>
+    <!-- ========================================== -->
+    <!-- HEADER -->
+    <!-- ========================================== -->
 
-    {% if agendamento %}
-        <div class="card">
-            <p><strong>ID:</strong> {{ agendamento.id }}</p>
-            <p><strong>Cliente:</strong> {{ agendamento.cliente }}</p>
-            <p><strong>Telefone:</strong> {{ agendamento.telefone }}</p>
-            <p><strong>Serviço:</strong> {{ agendamento.servico }}</p>
-            <p><strong>Preço:</strong> R$ {{ "%.2f"|format(agendamento.preco) }}</p>
-            <p><strong>Barbeiro:</strong> {{ agendamento.barbeiro }}</p>
-            <p><strong>Data:</strong> {{ agendamento.data }}</p>
-            <p><strong>Horário:</strong> {{ agendamento.horario }}</p>
-            <p><strong>Status:</strong> {{ agendamento.status }}</p>
+    <header class="bg-zinc-900 border-b border-amber-500/30">
+
+        <nav class="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
+
+            <!-- Logo -->
+            <a href="{{ url_for('index') }}"
+               class="text-lg font-bold text-amber-400">
+                ✂ Navalha de Ouro
+            </a>
+
+
+            <!-- Menu -->
+            <ul class="flex gap-6 text-sm">
+
+                <li>
+                    <a href="{{ url_for('index') }}"
+                       class="text-zinc-300 hover:text-amber-400">
+                        Início
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('ver_agendamentos') }}"
+                       class="text-amber-400 font-semibold">
+                        Agendamentos
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ========================================== -->
+    <!-- CONTEÚDO -->
+    <!-- ========================================== -->
+
+    <main class="flex-1 w-full max-w-5xl mx-auto px-6 py-12">
+
+        <h1 class="text-3xl font-bold">
+            Detalhes do
+            <span class="text-amber-400">
+                Agendamento
+            </span>
+        </h1>
+
+
+        <!-- ========================================== -->
+        <!-- AGENDAMENTO ENCONTRADO -->
+        <!-- ========================================== -->
+
+        {% if agendamento %}
+
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mt-8 max-w-xl">
+
+            <!-- Cabeçalho do card -->
+            <div class="flex items-center justify-between pb-4 border-b border-zinc-800">
+
+                <span class="text-zinc-400 text-sm">
+                    Agendamento #{{ agendamento.id }}
+                </span>
+
+
+                <!-- STATUS -->
+
+                {% if agendamento.status == 'Agendado' %}
+
+                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/15 text-amber-400">
+                        Agendado
+                    </span>
+
+                {% elif agendamento.status == 'Concluído' %}
+
+                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/15 text-green-400">
+                        Concluído
+                    </span>
+
+                {% elif agendamento.status == 'Cancelado' %}
+
+                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/15 text-red-400">
+                        Cancelado
+                    </span>
+
+                {% else %}
+
+                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-700 text-zinc-300">
+                        {{ agendamento.status }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ========================================== -->
+            <!-- DADOS DO AGENDAMENTO -->
+            <!-- ========================================== -->
+
+            <dl class="grid grid-cols-[8rem_1fr] gap-y-3 mt-4 text-sm">
+
+                <!-- Cliente -->
+                <dt class="text-zinc-400">
+                    Cliente
+                </dt>
+
+                <dd>
+                    {{ agendamento.cliente }}
+                </dd>
+
+
+                <!-- Telefone -->
+                <dt class="text-zinc-400">
+                    Telefone
+                </dt>
+
+                <dd>
+                    {{ agendamento.telefone }}
+                </dd>
+
+
+                <!-- Serviço -->
+                <dt class="text-zinc-400">
+                    Serviço
+                </dt>
+
+                <dd>
+                    {{ agendamento.servico }}
+                </dd>
+
+
+                <!-- Preço -->
+                <dt class="text-zinc-400">
+                    Preço
+                </dt>
+
+                <dd class="text-amber-400 font-semibold">
+                    R$ {{ agendamento.preco }}
+                </dd>
+
+
+                <!-- Barbeiro -->
+                <dt class="text-zinc-400">
+                    Barbeiro
+                </dt>
+
+                <dd>
+                    {{ agendamento.barbeiro }}
+                </dd>
+
+
+                <!-- Data -->
+                <dt class="text-zinc-400">
+                    Data
+                </dt>
+
+                <dd>
+                    {{ agendamento.data }}
+                </dd>
+
+
+                <!-- Horário -->
+                <dt class="text-zinc-400">
+                    Horário
+                </dt>
+
+                <dd>
+                    {{ agendamento.hora }}
+                </dd>
+
+            </dl>
+
         </div>
-    {% else %}
-        <p class="erro">Agendamento não encontrado!</p>
-    {% endif %}
 
-    <br>
-    <a href="{{ url_for('ver_agendamentos') }}">← Voltar para a listagem</a>
+
+        <!-- ========================================== -->
+        <!-- AGENDAMENTO NÃO ENCONTRADO -->
+        <!-- ========================================== -->
+
+        {% else %}
+
+        <div class="mt-8 p-6 bg-zinc-900 border border-red-500/30 rounded-xl max-w-xl">
+
+            <p class="text-red-400">
+                Agendamento não encontrado.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ========================================== -->
+        <!-- VOLTAR -->
+        <!-- ========================================== -->
+
+        <a href="{{ url_for('ver_agendamentos') }}"
+           class="inline-block mt-6 text-amber-400 hover:underline">
+
+            ← Voltar para a listagem
+
+        </a>
+
+    </main>
+
+
+    <!-- ========================================== -->
+    <!-- FOOTER -->
+    <!-- ========================================== -->
+
+    <footer class="border-t border-zinc-800 text-center text-sm text-zinc-500 py-6">
+
+        Barbearia Navalha de Ouro
+
+    </footer>
+
 </body>
+
 </html>

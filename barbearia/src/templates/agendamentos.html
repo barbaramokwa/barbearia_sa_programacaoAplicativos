@@ -1,75 +1,309 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <title>Agendamentos - Barbearia Navalha de Ouro</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
-        nav { margin-bottom: 20px; }
-        nav a { margin-right: 15px; text-decoration: none; font-weight: bold; color: #2c3e50; }
-        .filtros { margin-bottom: 20px; }
-        .filtros a { margin-right: 10px; padding: 6px 12px; background: #ddd; border-radius: 4px; text-decoration: none; color: #000; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
-        th { background-color: #2c3e50; color: white; }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-        /* Destaque condicional de status */
-        .status-concluido { background-color: #d4edda; }
-        .status-cancelado { background-color: #f8d7da; }
-        .status-agendado { background-color: #ffffff; }
-    </style>
+    <title>Agendamentos | Barbearia Navalha de Ouro</title>
+
+    <link rel="stylesheet" href="../dist/output.css">
 </head>
-<body>
-    <h1>Barbearia Navalha de Ouro</h1>
 
-    <nav>
-        <a href="{{ url_for('index') }}">Início</a>
-        <a href="{{ url_for('ver_agendamentos') }}">Agendamentos</a>
-    </nav>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
 
-    <h2>Listagem de Agendamentos (Filtro: {{ filtro_atual }})</h2>
+    <!-- ========================================== -->
+    <!-- HEADER -->
+    <!-- ========================================== -->
 
-    <div class="filtros">
-        <strong>Filtrar por Status:</strong>
-        <a href="{{ url_for('ver_agendamentos') }}">Todos</a>
-        <a href="{{ url_for('ver_agendamentos_por_status', status='Agendado') }}">Agendados</a>
-        <a href="{{ url_for('ver_agendamentos_por_status', status='Concluído') }}">Concluídos</a>
-        <a href="{{ url_for('ver_agendamentos_por_status', status='Cancelado') }}">Cancelados</a>
-    </div>
+    <header class="bg-zinc-900 border-b border-amber-500/30">
 
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Cliente</th>
-                <th>Serviço</th>
-                <th>Barbeiro</th>
-                <th>Data</th>
-                <th>Horário</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for agendamento in agendamentos %}
-                <tr class="{% if agendamento.status == 'Concluído' %}status-concluido{% elif agendamento.status == 'Cancelado' %}status-cancelado{% else %}status-agendado{% endif %}">
-                    <td>{{ loop.index }}</td>
-                    <td>{{ agendamento.cliente }}</td>
-                    <td>{{ agendamento.servico }}</td>
-                    <td>{{ agendamento.barbeiro }}</td>
-                    <td>{{ agendamento.data }}</td>
-                    <td>{{ agendamento.horario }}</td>
-                    <td><strong>{{ agendamento.status }}</strong></td>
-                    <td>
-                        <a href="{{ url_for('ver_detalhe', id=agendamento.id) }}">Ver Detalhes</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="8">Nenhum agendamento encontrado.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <nav class="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
+
+            <!-- Logo -->
+            <a href="{{ url_for('index') }}"
+               class="text-lg font-bold text-amber-400">
+                ✂ Navalha de Ouro
+            </a>
+
+            <!-- Menu -->
+            <ul class="flex gap-6 text-sm">
+
+                <li>
+                    <a href="{{ url_for('index') }}"
+                       class="text-zinc-300 hover:text-amber-400">
+                        Início
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('ver_agendamentos') }}"
+                       class="text-amber-400 font-semibold">
+                        Agendamentos
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ========================================== -->
+    <!-- CONTEÚDO -->
+    <!-- ========================================== -->
+
+    <main class="flex-1 w-full max-w-5xl mx-auto px-6 py-12">
+
+        <h1 class="text-3xl font-bold">
+            Listagem de
+            <span class="text-amber-400">
+                Agendamentos
+            </span>
+        </h1>
+
+
+        <!-- ========================================== -->
+        <!-- FILTROS -->
+        <!-- ========================================== -->
+
+        <div class="flex flex-wrap items-center gap-2 mt-6 mb-6">
+
+            <span class="text-sm text-zinc-400 mr-1">
+                Filtrar por status:
+            </span>
+
+
+            <!-- Todos -->
+            <a href="{{ url_for('ver_agendamentos') }}"
+               class="px-3 py-1.5 rounded-full text-sm
+               {% if filtro_atual == 'Todos' %}
+                   bg-amber-500 text-zinc-950 font-semibold
+               {% else %}
+                   bg-zinc-800 text-zinc-300 hover:bg-zinc-700
+               {% endif %}">
+                Todos
+            </a>
+
+
+            <!-- Agendados -->
+            <a href="{{ url_for('ver_agendamentos_por_status', status='Agendado') }}"
+               class="px-3 py-1.5 rounded-full text-sm
+               {% if filtro_atual == 'Agendado' %}
+                   bg-amber-500 text-zinc-950 font-semibold
+               {% else %}
+                   bg-zinc-800 text-zinc-300 hover:bg-zinc-700
+               {% endif %}">
+                Agendado
+            </a>
+
+
+            <!-- Concluídos -->
+            <a href="{{ url_for('ver_agendamentos_por_status', status='Concluído') }}"
+               class="px-3 py-1.5 rounded-full text-sm
+               {% if filtro_atual == 'Concluído' %}
+                   bg-amber-500 text-zinc-950 font-semibold
+               {% else %}
+                   bg-zinc-800 text-zinc-300 hover:bg-zinc-700
+               {% endif %}">
+                Concluído
+            </a>
+
+
+            <!-- Cancelados -->
+            <a href="{{ url_for('ver_agendamentos_por_status', status='Cancelado') }}"
+               class="px-3 py-1.5 rounded-full text-sm
+               {% if filtro_atual == 'Cancelado' %}
+                   bg-amber-500 text-zinc-950 font-semibold
+               {% else %}
+                   bg-zinc-800 text-zinc-300 hover:bg-zinc-700
+               {% endif %}">
+                Cancelado
+            </a>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- TABELA -->
+        <!-- ========================================== -->
+
+        <div class="overflow-x-auto bg-zinc-900 border border-zinc-800 rounded-xl">
+
+            <table class="w-full text-left text-sm">
+
+                <thead class="text-zinc-400">
+
+                    <tr>
+
+                        <th class="px-4 py-3 font-medium">
+                            #
+                        </th>
+
+                        <th class="px-4 py-3 font-medium">
+                            Cliente
+                        </th>
+
+                        <th class="px-4 py-3 font-medium">
+                            Serviço
+                        </th>
+
+                        <th class="px-4 py-3 font-medium">
+                            Barbeiro
+                        </th>
+
+                        <th class="px-4 py-3 font-medium">
+                            Data
+                        </th>
+
+                        <th class="px-4 py-3 font-medium">
+                            Horário
+                        </th>
+
+                        <th class="px-4 py-3 font-medium">
+                            Status
+                        </th>
+
+                        <th class="px-4 py-3 font-medium">
+                            Ações
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% if agendamentos %}
+
+                        {% for agendamento in agendamentos %}
+
+                        <tr class="border-t border-zinc-800 hover:bg-zinc-800/50">
+
+                            <!-- ID -->
+                            <td class="px-4 py-3 text-zinc-500">
+                                {{ agendamento.id }}
+                            </td>
+
+
+                            <!-- CLIENTE -->
+                            <td class="px-4 py-3">
+                                {{ agendamento.cliente }}
+                            </td>
+
+
+                            <!-- SERVIÇO -->
+                            <td class="px-4 py-3">
+                                {{ agendamento.servico }}
+                            </td>
+
+
+                            <!-- BARBEIRO -->
+                            <td class="px-4 py-3">
+                                {{ agendamento.barbeiro }}
+                            </td>
+
+
+                            <!-- DATA -->
+                            <td class="px-4 py-3">
+                                {{ agendamento.data }}
+                            </td>
+
+
+                            <!-- HORÁRIO -->
+                            <td class="px-4 py-3">
+                                {{ agendamento.horario }}
+                            </td>
+
+
+                            <!-- STATUS -->
+                            <td class="px-4 py-3">
+
+                                {% if agendamento.status == 'Agendado' %}
+
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/15 text-amber-400">
+                                        Agendado
+                                    </span>
+
+                                {% elif agendamento.status == 'Concluído' %}
+
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/15 text-green-400">
+                                        Concluído
+                                    </span>
+
+                                {% elif agendamento.status == 'Cancelado' %}
+
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/15 text-red-400">
+                                        Cancelado
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-700 text-zinc-300">
+                                        {{ agendamento.status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- AÇÕES -->
+                            <td class="px-4 py-3">
+
+                                <a
+                                    href="{{ url_for('ver_detalhe', id=agendamento.id) }}"
+                                    class="text-amber-400 hover:underline">
+
+                                    Ver detalhes
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <!-- Nenhum agendamento -->
+                        <tr class="border-t border-zinc-800">
+
+                            <td
+                                colspan="8"
+                                class="px-4 py-10 text-center text-zinc-500">
+
+                                Nenhum agendamento encontrado.
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+    <!-- ========================================== -->
+    <!-- FOOTER -->
+    <!-- ========================================== -->
+
+    <footer class="border-t border-zinc-800 text-center text-sm text-zinc-500 py-6">
+
+        Barbearia Navalha de Ouro
+
+    </footer>
+
 </body>
+
 </html>
